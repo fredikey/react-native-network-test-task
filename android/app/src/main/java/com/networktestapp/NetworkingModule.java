@@ -92,24 +92,20 @@ public class NetworkingModule extends ReactContextBaseJavaModule {
     }
 
     private static String getResponseString(InputStream inputStream) throws IOException {
-        try {
-            InputStream responseStream = new BufferedInputStream(inputStream);
-            BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+        InputStream responseStream = new BufferedInputStream(inputStream);
+        BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
 
-            String line = "";
-            StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
 
-            while ((line = responseStreamReader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-
-            responseStream.close();
-            responseStreamReader.close();
-
-            return stringBuilder.toString();
-        } catch (IOException e) {
-            throw e;
+        while ((line = responseStreamReader.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
         }
+
+        responseStream.close();
+        responseStreamReader.close();
+
+        return stringBuilder.toString();
     }
 
     private static JSONObject convertMapToJson(ReadableMap readableMap) throws JSONException {
