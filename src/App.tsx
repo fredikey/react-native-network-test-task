@@ -1,12 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
 import type {PropsWithChildren} from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -24,6 +17,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {makeRequest, NetworkRequestType} from './lib/networking';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -61,6 +55,68 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    // Example 1: Simple Get Request
+    makeRequest('https://dummyjson.com/products/1', {
+      type: NetworkRequestType.GET,
+      headers: {'Content-Type': 'application/json'},
+    })
+      .then(data => {
+        console.log('(1) Response: ', data);
+      })
+      .catch(err => {
+        console.log('(1) Native Error: ', err);
+      });
+
+    // Example 2: Protected Get Request
+    makeRequest('https://dummyjson.com/auth/product/1', {
+      type: NetworkRequestType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInVzZXJuYW1lIjoia21pbmNoZWxsZSIsImVtYWlsIjoia21pbmNoZWxsZUBxcS5jb20iLCJmaXJzdE5hbWUiOiJKZWFubmUiLCJsYXN0TmFtZSI6IkhhbHZvcnNvbiIsImdlbmRlciI6ImZlbWFsZSIsImltYWdlIjoiaHR0cHM6Ly9yb2JvaGFzaC5vcmcvYXV0cXVpYXV0LnBuZyIsImlhdCI6MTY5NzE2MTU2MCwiZXhwIjoxNjk3MTY1MTYwfQ.77DXyiL2HQqOzGOBya2r_lAYpTrfHDarc_jj5Njo5mI',
+      },
+    })
+      .then(data => {
+        console.log('(2) Response: ', data);
+      })
+      .catch(err => {
+        console.log('(2) Native Error: ', err);
+      });
+
+    // Example 3: Errored Get Request
+    makeRequest('https://dummyjson.com/http/404/Hello_Peter', {
+      type: NetworkRequestType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(data => {
+        console.log('(3) Response: ', data);
+      })
+      .catch(err => {
+        console.log('(3) Native Err: ', err);
+      });
+
+    // Example 4: Post Request
+    makeRequest('https://dummyjson.com/auth/login', {
+      type: NetworkRequestType.POST,
+      body: {
+        username: 'kminchelle',
+        password: '0lelplR',
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(data => {
+        console.log('(4) Response: ', data);
+      })
+      .catch(err => {
+        console.log('(4) Native Err: ', err);
+      });
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
